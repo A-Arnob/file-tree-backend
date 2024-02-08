@@ -25,11 +25,11 @@ const app: Express = express();
 // const port = process.env.PORT || 3000;
 const port = 8080;
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use(express.json());
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 
 /* Define a route for the root path ("/")
  using the HTTP GET method */

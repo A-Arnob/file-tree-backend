@@ -12,6 +12,13 @@ const upload = async (req: Request, res: Response) => {
         }
 
         console.log(req.file);
+        console.log(req.body);
+        const obj = JSON.parse(JSON.stringify(req.body)); // req.body = [Object: null prototype] { title: 'product' }
+
+        console.log(obj); // { title: 'product' }
+        console.log(obj.parent);
+
+
 
         res.status(200).send({
             message: "Uploaded the file successfully: " + req.file.originalname,
