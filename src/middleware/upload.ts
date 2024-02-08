@@ -1,3 +1,7 @@
+// Middleware for file upload
+// configuring multer
+
+
 import { Request } from "express";
 import multer, { FileFilterCallback } from "multer";
 import util from "util";
@@ -6,6 +10,7 @@ const maxSize = 10 * 1024 * 1024;
 
 type DestinationCallback = (error: Error | null, destination: string) => void;
 type FileNameCallback = (error: Error | null, filename: string) => void;
+
 
 const storage = multer.diskStorage({
   destination: (
@@ -34,6 +39,6 @@ let uploadFile = multer({
   limits: { fileSize: maxSize },
 }).single("file");
 
-let UploadFile = util.promisify(uploadFile);
+let uploadFileMiddleware = util.promisify(uploadFile);
 
-export default UploadFile;
+export default uploadFileMiddleware;
