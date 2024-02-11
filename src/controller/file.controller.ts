@@ -1,5 +1,6 @@
 // Configuring the Upload for POST Route
 
+import { getDb } from "../../data/database";
 import uploadFile from "../middleware/upload";
 import { Request, Response } from "express";
 
@@ -13,10 +14,14 @@ const upload = async (req: Request, res: Response) => {
 
         console.log(req.file);
         console.log(req.body);
-        const obj = JSON.parse(JSON.stringify(req.body)); // req.body = [Object: null prototype] { title: 'product' }
+        const bodyObj = JSON.parse(JSON.stringify(req.body)); // req.body = [Object: null prototype] { title: 'product' }
 
-        console.log(obj); // { title: 'product' }
-        console.log(obj.parent);
+        console.log(bodyObj); // { title: 'product' }
+        console.log(bodyObj.parent);
+
+        await getDb()
+            .collection("files")
+            .insertOne({ name: req.file.filename, originalname: req.file.originalname, parent: bodyObj.parent, path: req.file.path });
 
 
 
