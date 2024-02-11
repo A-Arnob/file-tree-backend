@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use(express.json());
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 
 /* Define a route for the root path ("/")
  using the HTTP GET method */

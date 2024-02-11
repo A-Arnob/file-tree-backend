@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from "express";
 import { getDb } from "../../data/database";
 import multer from "multer";
 import controller from "../controller/file.controller";
-// import controller from "../controller/file.controller";
+import * as fs from 'fs';
 
 const router = express.Router();
 
@@ -20,7 +20,48 @@ router.get("/folders/:parent", async function (req: Request, res: Response) {
     .collection("folders")
     .find({ parent: parentName })
     .toArray();
+
+  const files = await getDb()
+    .collection("files")
+    .find({ parent: parentName })
+    .toArray();
+
   res.send(folders);
+});
+
+router.get("/files/:parent", async function (req: Request, res: Response) {
+  const parentName = req.params.parent;
+
+  const files = await getDb()
+    .collection("files")
+    .find({ parent: parentName })
+    .toArray();
+
+  res.send(files);
+});
+
+//// Upload File////
+
+router.get('/file/:filename', async (req, res) => {
+  const fileName = req.params.filename;
+
+  const file = await getDb()
+    .collection("files")
+    .findOne({ filename: fileName });
+
+  if (!file) {
+    res.send("Couldn't Find File");
+    return;
+  }
+
+  const filePath = file.path;
+
+  const stream = fs.createReadStream(filePath);
+
+  res.setHeader('Content-Type', "multipart/form-data");
+  res.setHeader('Content-Disposition', `inline; filename= ${file.originalname}`);
+
+  stream.pipe(res);
 });
 
 router.post(
