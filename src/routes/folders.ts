@@ -78,32 +78,42 @@ async function deleteFolder(folderName: string) {
     .collection("folders")
     .deleteMany({ name: folderName });
 
-
-
 }
 
 router.post(
   "/folders/delete/:name",
   async function (req: Request, res: Response) {
-    // res.header("Access-Control-Allow-Origin", "*");
-    // res.header("Access-Control-Allow-Headers", "X-Requested-With");
     const folderName = req.params.name;
-
-    // const deleteChild = await getDb()
-    //   .collection("folders")
-    //   .deleteMany({ parent: folderName });
-
-    // const deleteFolder = await getDb()
-    //   .collection("folders")
-    //   .deleteMany({ name: folderName });
-
-    // console.log("deleteChild:" + deleteChild);
-    // console.log("deletefolder:" + deleteFolder);
 
     deleteFolder(folderName);
     res.send("Deleted");
   }
 );
+
+async function deleteFile(fileName: string) {
+  const fileForDelete = await getDb().collection("files").deleteOne({ name: fileName });
+
+
+  const filePath = `./FileUploads/${fileName}`;
+
+  fs.unlink(filePath, (err) => {
+    if (err) {
+      console.error('Error deleting the file:', err);
+    } else {
+      console.log('File deleted successfully!');
+    }
+  });
+
+  console.log("File Deleted: " + fileName);
+}
+
+router.post("/file/delete/:filename", async function (req: Request, res: Response) {
+  const fileName = req.params.filename;
+
+  deleteFile(fileName);
+  res.send("File Deleted");
+
+})
 
 router.post("/folders/addfolder", async function (req: Request, res: Response) {
   const obj: folderObject = req.body;
