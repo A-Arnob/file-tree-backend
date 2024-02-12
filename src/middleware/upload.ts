@@ -30,7 +30,7 @@ const storage = multer.diskStorage({
     // Define your filename logic here
     // For example, using a unique timestamp:
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    callback(null, file.originalname + "-" + uniqueSuffix);
+    callback(null, uniqueSuffix + "-" + file.originalname);
   },
 });
 

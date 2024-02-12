@@ -47,7 +47,7 @@ router.get('/file/:filename', async (req, res) => {
 
   const file = await getDb()
     .collection("files")
-    .findOne({ filename: fileName });
+    .findOne({ name: fileName });
 
   if (!file) {
     res.send("Couldn't Find File");
@@ -56,12 +56,15 @@ router.get('/file/:filename', async (req, res) => {
 
   const filePath = file.path;
 
-  const stream = fs.createReadStream(filePath);
+  // const stream = fs.createReadStream(filePath);
 
-  res.setHeader('Content-Type', "multipart/form-data");
-  res.setHeader('Content-Disposition', `inline; filename= ${file.originalname}`);
+  // res.setHeader('Content-Type', "multipart/form-data");
+  // res.setHeader('Content-Disposition', `inline; filename= ${file.originalname}`);
+  // res.setHeader('Content-Disposition', 'attachment');
 
-  stream.pipe(res);
+  // stream.pipe(res);
+
+  res.download(filePath);
 });
 
 router.post(
