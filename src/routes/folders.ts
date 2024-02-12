@@ -67,6 +67,21 @@ router.get('/file/:filename', async (req, res) => {
   res.download(filePath);
 });
 
+async function deleteFolder(folderName: string) {
+  const childsList = await getDb().collection("folders").find({ parent: folderName }).toArray();
+  if (childsList.length > 0) {
+    childsList.map((folder) => deleteFolder(folder.name))
+  }
+  console.log("Deleted Folder: " + folderName);
+
+  return await getDb()
+    .collection("folders")
+    .deleteMany({ name: folderName });
+
+
+
+}
+
 router.post(
   "/folders/delete/:name",
   async function (req: Request, res: Response) {
@@ -74,16 +89,18 @@ router.post(
     // res.header("Access-Control-Allow-Headers", "X-Requested-With");
     const folderName = req.params.name;
 
-    const deleteChild = await getDb()
-      .collection("folders")
-      .deleteMany({ parent: folderName });
+    // const deleteChild = await getDb()
+    //   .collection("folders")
+    //   .deleteMany({ parent: folderName });
 
-    const deleteFolder = await getDb()
-      .collection("folders")
-      .deleteMany({ name: folderName });
+    // const deleteFolder = await getDb()
+    //   .collection("folders")
+    //   .deleteMany({ name: folderName });
 
-    console.log("deleteChild:" + deleteChild);
-    console.log("deletefolder:" + deleteFolder);
+    // console.log("deleteChild:" + deleteChild);
+    // console.log("deletefolder:" + deleteFolder);
+
+    deleteFolder(folderName);
     res.send("Deleted");
   }
 );
