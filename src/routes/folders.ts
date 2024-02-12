@@ -67,8 +67,21 @@ router.get('/file/:filename', async (req, res) => {
   res.download(filePath);
 });
 
+
+// async function deleteNestedFiles(folderOriginalName: string) {
+//   const childsList = await getDb().collection("files").find({ parent: folderOriginalName }).toArray();
+
+//   if (childsList.length > 0) {
+//     childsList.map((file) => deleteNestedFiles())
+//   }
+// }
+
 async function deleteFolder(folderName: string) {
   const childsList = await getDb().collection("folders").find({ parent: folderName }).toArray();
+  const childFileList = await getDb().collection("files").find({ parent: folderName }).toArray();
+
+  childFileList.map((file) => deleteFile(file.name));
+
   if (childsList.length > 0) {
     childsList.map((folder) => deleteFolder(folder.name))
   }
@@ -92,7 +105,6 @@ router.post(
 
 async function deleteFile(fileName: string) {
   const fileForDelete = await getDb().collection("files").deleteOne({ name: fileName });
-
 
   const filePath = `./FileUploads/${fileName}`;
 
