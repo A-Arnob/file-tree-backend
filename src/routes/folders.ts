@@ -37,7 +37,9 @@ router.get("/files/:parent", async function (req: Request, res: Response) {
     .find({ parent: parentName })
     .toArray();
 
-  res.send(files);
+  const filteredFiles = files.map(({ path, ...rest }) => { return rest; })
+
+  res.send(filteredFiles);
 });
 
 //// Upload File////
