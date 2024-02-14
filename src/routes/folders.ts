@@ -131,9 +131,13 @@ router.post("/file/delete/:filename", async function (req: Request, res: Respons
 
 router.post("/folders/addfolder", async function (req: Request, res: Response) {
   const obj: folderObject = req.body;
+
+  const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+  const uniqueName = uniqueSuffix + "-" + obj.name;
+
   await getDb()
     .collection("folders")
-    .insertOne({ name: obj.name, parent: obj.parent });
+    .insertOne({ OriginalName: obj.name, name: uniqueName, parent: obj.parent });
   console.log(obj);
   res.send("Object received");
 });
