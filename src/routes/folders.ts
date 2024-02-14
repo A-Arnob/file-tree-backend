@@ -137,7 +137,7 @@ router.post("/folders/addfolder", async function (req: Request, res: Response) {
 
   await getDb()
     .collection("folders")
-    .insertOne({ OriginalName: obj.name, name: uniqueName, parent: obj.parent });
+    .insertOne({ originalName: obj.name, name: uniqueName, parent: obj.parent });
   console.log(obj);
   res.send("Object received");
 });
