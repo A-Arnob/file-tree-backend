@@ -1,9 +1,7 @@
-const mongoose = require("mongoose");
-// import mongoose from "mongoose";
+// const mongoose = require("mongoose");
+import mongoose from "mongoose";
 mongoose
-  .connect("mongodb://localhost/my_database", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  .connect("mongodb://localhost:27017", {
   })
-  .then(() => console.log("MongoDB connected"))
-  .catch((err: any) => console.log(err));
+  .then(() => { console.log("MongoDB connected using mongoose"); })
+  .catch((err: any) => { console.log(err); process.exit(); })
