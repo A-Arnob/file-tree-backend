@@ -48,7 +48,7 @@ async function signIn(req: Request, res: Response) {
             });
         }
 
-        const token = jwt.sign({ id: findUser._id }, tokenKeys.secretKey, { expiresIn: 3600 });
+        const token = jwt.sign({ id: findUser._id }, tokenKeys.secretKey, { expiresIn: 10 });
         const refreshToken = jwt.sign({ id: findUser._id }, tokenKeys.refreshSecretKey, { expiresIn: 86400 });
         refreshTokens.push(refreshToken);
 
@@ -66,6 +66,7 @@ async function signIn(req: Request, res: Response) {
 
 async function refreshTokenCheck(req: Request, res: Response) {
     const refreshToken = req.headers['x-access-token'] as string;
+    console.log("Into Refresh");
     if (refreshToken == null) return res.status(401).send({ message: "Found no refresh token" });
     if (!refreshTokens.includes(refreshToken)) return res.status(403).send({ message: "Refresh token not matched" });
 
