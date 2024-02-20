@@ -27,4 +27,8 @@ const checkDuplicateUserOrEmail = async (req: Request, res: Response, next: Next
     }
 }
 
-export default checkDuplicateUserOrEmail;
+const verifySignUp = {
+    checkDuplicateUserOrEmail,
+}
+
+export default verifySignUp;

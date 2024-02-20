@@ -1,8 +1,11 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express, NextFunction, Request, Response } from "express";
 import { getDb } from "../../data/database";
 import multer from "multer";
 import controller from "../controller/file.controller";
 import * as fs from 'fs';
+import verifySignUp from "../middleware/verifySignUp";
+import signController from "../controller/signUpSignIn.controller";
+import verifyToken from "../middleware/authJwt";
 
 const router = express.Router();
 
@@ -13,6 +16,8 @@ interface folderObject {
   name: string;
   parent: string;
 }
+
+
 
 router.get("/folders/:parent", async function (req: Request, res: Response) {
   const parentName = req.params.parent;
@@ -156,5 +161,22 @@ router.post("/folders/addfolder", async function (req: Request, res: Response) {
 // });
 
 router.post("/fileupload", controller.upload);
+
+
+
+
+
+////////Authorization////////
+
+router.post("/signup", verifySignUp.checkDuplicateUserOrEmail, signController.signUp);
+
+router.post("/signin", signController.signIn);
+
+router.post("/token", signController.refreshTokenCheck);
+
+router.get("/test/user", verifyToken);
+
+
+
 
 export default router;

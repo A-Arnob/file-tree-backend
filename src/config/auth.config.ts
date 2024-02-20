@@ -1,3 +1,9 @@
 const secretKey = "secret-key"; //secret key to encode & decode token
+const refreshSecretKey = "refresh-secret-key";
 
-export default secretKey; 
+const tokenKeys = {
+    secretKey,
+    refreshSecretKey
+}
+
+export default tokenKeys; 

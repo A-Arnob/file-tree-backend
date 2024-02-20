@@ -1,9 +1,15 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 
-const users = mongoose.model("users", new mongoose.Schema({
-    userName: String,
-    email: String,
-    password: String,
+interface IUser {
+    userName: string;
+    email: string;
+    password: string;
+}
+
+const users = model<IUser>("users", new Schema<IUser>({
+    userName: { type: String },
+    email: { type: String, required: true },
+    password: { type: String, required: true },
 }))
 
 export default users;
