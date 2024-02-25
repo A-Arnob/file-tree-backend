@@ -71,18 +71,18 @@ async function refreshTokenCheck(req: Request, res: Response) {
     if (!refreshTokens.includes(refreshToken)) return res.status(403).send({ message: "Refresh token not matched" });
 
     try {
-        const decodedtoken = jwt.verify(refreshToken, tokenKeys.refreshSecretKey) as jwt.JwtPayload;
-        const accessToken = generateAccessToken(decodedtoken.id);
+        const decodedRefreshToken = jwt.verify(refreshToken, tokenKeys.refreshSecretKey) as jwt.JwtPayload;
+        const accessToken = generateAccessToken(decodedRefreshToken.id, 10);
         res.status(201).send(accessToken);
 
     } catch (error) {
-        return res.sendStatus(403);
+        return res.status(403).send({ message: "Invalid Refresh Token. Log In Again" });
     }
 
 }
 
-function generateAccessToken(userId: any) {
-    jwt.sign({ id: userId }, tokenKeys.secretKey, { expiresIn: 10 });
+function generateAccessToken(userId: any, expireTime: number) {
+    return jwt.sign({ id: userId }, tokenKeys.secretKey, { expiresIn: expireTime });
 }
 
 const signController = {
