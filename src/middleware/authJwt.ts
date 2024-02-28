@@ -16,16 +16,16 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
     }
     try {
         const decodedToken = jwt.verify(token, tokenKeys.secretKey);
-        res.send(decodedToken);
+        // res.send(decodedToken);
 
 
     } catch (err) {
         if (err instanceof TokenExpiredError) {
-            return res.status(401).send({ message: "Unauthorized! Access Token was expired!" });
+            return res.status(403).send("Unauthorized! Access Token was expired!");
         }
-        return res.status(401).send("Unauthorized");
+        return res.status(401).send("Unauthorized TOken");
     }
-
+    next();
 
 }
 

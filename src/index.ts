@@ -39,6 +39,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use(function (req: Request, res: Response, next: NextFunction) {
+
   res.header(
     "Access-Control-Allow-Headers",
     "x-access-token, Origin, Content-Type, Accept"

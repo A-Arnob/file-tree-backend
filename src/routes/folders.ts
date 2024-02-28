@@ -19,6 +19,22 @@ interface folderObject {
 
 
 
+
+////////Authorization////////
+
+router.post("/signup", verifySignUp.checkDuplicateUserOrEmail, signController.signUp);
+
+router.post("/signin", signController.signIn);
+
+router.post("/token", signController.refreshTokenCheck);
+
+router.get("/test/user", verifyToken);
+
+
+router.use(verifyToken);
+
+
+
 router.get("/folders/:parent", async function (req: Request, res: Response) {
   const parentName = req.params.parent;
   const folders = await getDb()
@@ -166,15 +182,7 @@ router.post("/fileupload", controller.upload);
 
 
 
-////////Authorization////////
 
-router.post("/signup", verifySignUp.checkDuplicateUserOrEmail, signController.signUp);
-
-router.post("/signin", signController.signIn);
-
-router.post("/token", signController.refreshTokenCheck);
-
-router.get("/test/user", verifyToken);
 
 
 
