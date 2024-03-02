@@ -54,6 +54,7 @@ async function signIn(req: Request, res: Response) {
 
         res.status(200).send({
             id: findUser._id,
+            userName: findUser.userName,
             email: findUser.email,
             accessToken: token,
             refreshToken: refreshToken

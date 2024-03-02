@@ -36,6 +36,7 @@ router.use(verifyToken);
 
 
 router.get("/folders/:parent", async function (req: Request, res: Response) {
+
   const parentName = req.params.parent;
   const folders = await getDb()
     .collection("folders")
