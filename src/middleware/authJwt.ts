@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken"
+import jwt, { JwtPayload } from "jsonwebtoken"
 import secretKey from "../config/auth.config"
 import db from "../models/mongoosedb"
 import { Request, Response, NextFunction } from "express";
@@ -6,6 +6,8 @@ import tokenKeys from "../config/auth.config";
 
 const user = db.users;
 const { TokenExpiredError } = jwt;
+
+export let userId:string = "1";
 
 
 function verifyToken(req: Request, res: Response, next: NextFunction) {
@@ -15,7 +17,10 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
         return res.status(403).send({ message: "No Token Provided" });
     }
     try {
-        const decodedToken = jwt.verify(token, tokenKeys.secretKey);
+        const decodedToken = jwt.verify(token, tokenKeys.secretKey) as JwtPayload;
+        // console.log(decodedToken.id);
+        userId = decodedToken.id as string;
+        if(userId === "1") return;
         // res.send(decodedToken);
 
 

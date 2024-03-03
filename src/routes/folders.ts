@@ -7,6 +7,8 @@ import verifySignUp from "../middleware/verifySignUp";
 import signController from "../controller/signUpSignIn.controller";
 import verifyToken from "../middleware/authJwt";
 
+import { userId } from "../middleware/authJwt";
+
 const router = express.Router();
 
 // Create a Multer instance with a destination folder for file uploads
@@ -40,7 +42,7 @@ router.get("/folders/:parent", async function (req: Request, res: Response) {
   const parentName = req.params.parent;
   const folders = await getDb()
     .collection("folders")
-    .find({ parent: parentName })
+    .find({ parent: parentName, user: userId })
     .toArray();
 
   const files = await getDb()
@@ -56,7 +58,7 @@ router.get("/files/:parent", async function (req: Request, res: Response) {
 
   const files = await getDb()
     .collection("files")
-    .find({ parent: parentName })
+    .find({ parent: parentName, user: userId })
     .toArray();
 
   const filteredFiles = files.map(({ path, ...rest }) => { return rest; })
@@ -71,7 +73,7 @@ router.get('/file/:filename', async (req, res) => {
 
   const file = await getDb()
     .collection("files")
-    .findOne({ name: fileName });
+    .findOne({ name: fileName,  user: userId });
 
   if (!file) {
     res.send("Couldn't Find File");
@@ -159,7 +161,7 @@ router.post("/folders/addfolder", async function (req: Request, res: Response) {
 
   await getDb()
     .collection("folders")
-    .insertOne({ originalName: obj.name, name: uniqueName, parent: obj.parent });
+    .insertOne({ originalName: obj.name, name: uniqueName, parent: obj.parent, user: userId });
   console.log(obj);
   res.send("Object received");
 });

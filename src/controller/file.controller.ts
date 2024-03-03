@@ -1,6 +1,7 @@
 // Configuring the Upload for POST Route
 
 import { getDb } from "../../data/database";
+import { userId } from "../middleware/authJwt";
 import uploadFile from "../middleware/upload";
 import { Request, Response } from "express";
 
@@ -21,7 +22,7 @@ const upload = async (req: Request, res: Response) => {
 
         await getDb()
             .collection("files")
-            .insertOne({ name: req.file.filename, originalname: req.file.originalname, parent: bodyObj.parent, path: req.file.path });
+            .insertOne({ name: req.file.filename, originalname: req.file.originalname, parent: bodyObj.parent, path: req.file.path,  user: userId });
 
 
 
