@@ -35,15 +35,16 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
 }
 
 export function verifyRefreshToken(req: Request, res: Response, next: NextFunction){
-    const refreshToken = req.body.refreshToken;
+    const {refreshToken} = req.body;
+    console.log(req.body);
 
     if(!refreshToken){
         return res.status(403).send("No Refresh Token");
     }
     try{
-        const decodedToken = jwt.verify(refreshToken, tokenKeys.secretKey) as JwtPayload;
+        const decodedToken = jwt.verify(refreshToken, tokenKeys.refreshSecretKey) as JwtPayload;
         const userId = decodedToken.id as string;
-        const token = jwt.sign({ id: userId }, tokenKeys.secretKey, { expiresIn: 30 * 60 });
+        const token = jwt.sign({ id: userId }, tokenKeys.secretKey, { expiresIn: 30 });
         const newRefreshToken = jwt.sign({ id: userId }, tokenKeys.refreshSecretKey, { expiresIn: 86400 });
 
         res.status(200).send({

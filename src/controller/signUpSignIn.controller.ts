@@ -48,7 +48,7 @@ async function signIn(req: Request, res: Response) {
             });
         }
 
-        const token = jwt.sign({ id: findUser._id }, tokenKeys.secretKey, { expiresIn: 30 * 60 });
+        const token = jwt.sign({ id: findUser._id }, tokenKeys.secretKey, { expiresIn: 30 });
         const refreshToken = jwt.sign({ id: findUser._id }, tokenKeys.refreshSecretKey, { expiresIn: 86400 });
         refreshTokens.push(refreshToken);
 

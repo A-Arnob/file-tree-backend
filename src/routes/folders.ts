@@ -32,7 +32,7 @@ router.post("/token", signController.refreshTokenCheck);
 
 router.get("/test/user", verifyToken);
 
-router.post("/refreshtoken", verifyRefreshToken)
+router.post("/refreshtoken", verifyRefreshToken);
 
 
 router.use(verifyToken);
