@@ -22,7 +22,7 @@ const upload = async (req: Request, res: Response) => {
 
         await getDb()
             .collection("files")
-            .insertOne({ name: req.file.filename, originalname: req.file.originalname, parent: bodyObj.parent, path: req.file.path,  user: userId });
+            .insertOne({ name: req.file.filename, originalname: req.file.originalname, parent: bodyObj.parent, path: req.file.path, user: userId });
 
 
 

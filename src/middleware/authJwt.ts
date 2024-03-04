@@ -7,10 +7,10 @@ import tokenKeys from "../config/auth.config";
 const user = db.users;
 const { TokenExpiredError } = jwt;
 
-export let userId:string = "1";
+export let userId: string = "1";
 
 
-function verifyToken(req: Request, res: Response, next: NextFunction) {
+export function verifyToken(req: Request, res: Response, next: NextFunction) {
     let token = req.headers["x-access-token"] as string;
 
     if (!token) {
@@ -20,18 +20,41 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
         const decodedToken = jwt.verify(token, tokenKeys.secretKey) as JwtPayload;
         // console.log(decodedToken.id);
         userId = decodedToken.id as string;
-        if(userId === "1") return;
+        if (userId === "1") return;
         // res.send(decodedToken);
 
 
     } catch (err) {
         if (err instanceof TokenExpiredError) {
-            return res.status(403).send("Unauthorized! Access Token was expired!");
+            return res.status(401).send("Unauthorized! Access Token was expired!");
         }
-        return res.status(401).send("Unauthorized TOken");
+        return res.status(401).send("Unauthorized Token");
     }
     next();
 
 }
 
-export default verifyToken;
+export function verifyRefreshToken(req: Request, res: Response, next: NextFunction){
+    const refreshToken = req.body.refreshToken;
+
+    if(!refreshToken){
+        return res.status(403).send("No Refresh Token");
+    }
+    try{
+        const decodedToken = jwt.verify(refreshToken, tokenKeys.secretKey) as JwtPayload;
+        const userId = decodedToken.id as string;
+        const token = jwt.sign({ id: userId }, tokenKeys.secretKey, { expiresIn: 30 * 60 });
+        const newRefreshToken = jwt.sign({ id: userId }, tokenKeys.refreshSecretKey, { expiresIn: 86400 });
+
+        res.status(200).send({
+            accessToken: token,
+            refreshToken: newRefreshToken
+        })
+    }catch(err){
+        return res.status(401).send("Invalide Refresh Token");
+    }
+
+    next();
+}
+
+// export default verifyToken;

@@ -82,7 +82,7 @@ async function refreshTokenCheck(req: Request, res: Response) {
 
 }
 
-function generateAccessToken(userId: any, expireTime: number) {
+export function generateAccessToken(userId: any, expireTime: number) {
     return jwt.sign({ id: userId }, tokenKeys.secretKey, { expiresIn: expireTime });
 }
 

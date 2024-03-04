@@ -5,7 +5,7 @@ import controller from "../controller/file.controller";
 import * as fs from 'fs';
 import verifySignUp from "../middleware/verifySignUp";
 import signController from "../controller/signUpSignIn.controller";
-import verifyToken from "../middleware/authJwt";
+import {verifyRefreshToken, verifyToken} from "../middleware/authJwt";
 
 import { userId } from "../middleware/authJwt";
 
@@ -31,6 +31,8 @@ router.post("/signin", signController.signIn);
 router.post("/token", signController.refreshTokenCheck);
 
 router.get("/test/user", verifyToken);
+
+router.post("/refreshtoken", verifyRefreshToken)
 
 
 router.use(verifyToken);
