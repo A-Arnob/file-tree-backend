@@ -22,6 +22,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
         userId = decodedToken.id as string;
         if (userId === "1") return;
         // res.send(decodedToken);
+        
 
 
     } catch (err) {
@@ -36,7 +37,7 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
 
 export function verifyRefreshToken(req: Request, res: Response, next: NextFunction){
     const {refreshToken} = req.body;
-    console.log(req.body);
+    // console.log(req.body);
 
     if(!refreshToken){
         return res.status(403).send("No Refresh Token");
@@ -45,13 +46,18 @@ export function verifyRefreshToken(req: Request, res: Response, next: NextFuncti
         const decodedToken = jwt.verify(refreshToken, tokenKeys.refreshSecretKey) as JwtPayload;
         const userId = decodedToken.id as string;
         const token = jwt.sign({ id: userId }, tokenKeys.secretKey, { expiresIn: 30 });
-        const newRefreshToken = jwt.sign({ id: userId }, tokenKeys.refreshSecretKey, { expiresIn: 86400 });
+        const newRefreshToken = jwt.sign({ id: userId }, tokenKeys.refreshSecretKey, { expiresIn: 60*30 });
 
         res.status(200).send({
             accessToken: token,
             refreshToken: newRefreshToken
         })
+        // return;
+
     }catch(err){
+        if(err instanceof TokenExpiredError){
+            return res.status(403).send("Refresh Token Expired");
+        }
         return res.status(401).send("Invalide Refresh Token");
     }
 
