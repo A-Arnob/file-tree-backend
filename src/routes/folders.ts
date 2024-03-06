@@ -161,7 +161,7 @@ router.post("/folders/addfolder", async function (req: Request, res: Response) {
   const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
   const uniqueName = uniqueSuffix + "-" + obj.name;
 
-  console.log(obj);
+  // console.log(obj);
 
   await getDb()
     .collection("folders")

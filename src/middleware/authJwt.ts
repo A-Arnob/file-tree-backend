@@ -27,9 +27,9 @@ export function verifyToken(req: Request, res: Response, next: NextFunction) {
 
     } catch (err) {
         if (err instanceof TokenExpiredError) {
-            return res.status(401).send("Unauthorized! Access Token was expired!");
+            return res.status(401).send();
         }
-        return res.status(401).send("Unauthorized Token");
+        return res.status(401).send({message: "Unauthorized Token"});
     }
     next();
 
@@ -45,7 +45,7 @@ export function verifyRefreshToken(req: Request, res: Response, next: NextFuncti
     try{
         const decodedToken = jwt.verify(refreshToken, tokenKeys.refreshSecretKey) as JwtPayload;
         const userId = decodedToken.id as string;
-        const token = jwt.sign({ id: userId }, tokenKeys.secretKey, { expiresIn: 30 });
+        const token = jwt.sign({ id: userId }, tokenKeys.secretKey, { expiresIn: 60 });
         const newRefreshToken = jwt.sign({ id: userId }, tokenKeys.refreshSecretKey, { expiresIn: 60*30 });
 
         res.status(200).send({
